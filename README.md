@@ -29,15 +29,24 @@ npm run build
 npm run prod
 ```
 
-#### In frontend folder
+#### Frontend
 
+##### Environment Setup
+Development (Node 18+):
+```bash
+export NODE_OPTIONS=--openssl-legacy-provider
 ```
+
+Production (Node 18+):
+```bash
+# Add to your deployment environment configuration
+NODE_OPTIONS=--openssl-legacy-provider
+```
+
+##### Run Frontend
+```bash
 npm run serve
 ```
-
-# Production Deployment
-
-## In frontend folder
 
 ### Clearing the db d uring network hard reset
 
