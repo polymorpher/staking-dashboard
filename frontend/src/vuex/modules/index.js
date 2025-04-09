@@ -24,4 +24,5 @@ export default opts => ({
   keystore: require(`./keystore.js`).default(opts),
   notifications: require(`./notifications.js`).default(opts),
   validators: require(`./validators.js`).default(opts),
+  walletconnect: require(`./walletconnect.js`).default(opts),
 })

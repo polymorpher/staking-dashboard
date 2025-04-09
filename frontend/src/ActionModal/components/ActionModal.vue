@@ -389,7 +389,8 @@ const SIGN_METHODS = {
   MATHWALLET: `mathwallet`,
   ONEWALLET: `onewallet`,
   METAMASK: `metamask`,
-  MULTISIG: 'multisig'
+  MULTISIG: 'multisig',
+  WALLETCONNECT: 'walletconnect'
 }
 
 const signMethodOptions = {
@@ -420,6 +421,10 @@ const signMethodOptions = {
   MULTISIG: {
     key: 'Multisig',
     value: SIGN_METHODS.MULTISIG
+  },
+  WALLETCONNECT: {
+    key: 'WalletConnect',
+    value: SIGN_METHODS.WALLETCONNECT
   }
 }
 
@@ -427,10 +432,12 @@ const getMathWalletUtils = () => import("scripts/mathwallet-utils")
 const getOneWalletUtils = () => import("scripts/onewallet-utils")
 const getMetaMaskUtils = () => import("scripts/metamask-utils/index")
 const getMultisigUtils = () => import("scripts/multisig-utils/index")
+const getWalletConnectUtils = () => import("scripts/walletconnect-utils/index")
 let processMathWalletMessage
 let processOneWalletMessage
 let processMetaMaskMessage
 let processMultisigMessage
+let processWalletConnectMessage
 
 export const sessionType = {
   EXPLORE: "explore",
@@ -440,7 +447,8 @@ export const sessionType = {
   MATHWALLET: SIGN_METHODS.MATHWALLET,
   ONEWALLET: SIGN_METHODS.ONEWALLET,
   METAMASK: SIGN_METHODS.METAMASK,
-  MULTISIG: SIGN_METHODS.MULTISIG
+  MULTISIG: SIGN_METHODS.MULTISIG,
+  WALLETCONNECT: SIGN_METHODS.WALLETCONNECT
 }
 
 export default {
@@ -730,6 +738,13 @@ export default {
       })
       return;
     }
+    
+    if (sessionType === SIGN_METHODS.WALLETCONNECT) {
+      getWalletConnectUtils().then(module => {
+        processWalletConnectMessage = module.processWalletConnectMessage
+      })
+      return;
+    }
 
     if (sessionType === SIGN_METHODS.MULTISIG) {
       getMultisigUtils().then(module => {
@@ -975,6 +990,18 @@ export default {
             sendData,
             this.networkConfig,
             this.wallet.address
+          )
+        } else if (this.selectedSignMethod === SIGN_METHODS.WALLETCONNECT) {
+          this.$store.commit(`setActionInProgress`, true)
+
+          // Get the WalletConnect connector instance from the store
+          const connector = this.$store.getters.getWalletConnectConnector
+
+          sendResponse = await processWalletConnectMessage(
+            sendData,
+            this.networkConfig,
+            this.wallet.address,
+            connector
           )
         } else if (this.selectedSignMethod === SIGN_METHODS.MULTISIG) {
           this.$store.commit(`setActionInProgress`, true)
