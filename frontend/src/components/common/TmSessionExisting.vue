@@ -15,6 +15,13 @@
         />
         <LiSession
           v-if="!isMobileApp && !isIframe"
+          id="use-walletconnect"
+          icon="phonelink"
+          title="Use WalletConnect"
+          route="walletconnect"
+        />
+        <LiSession
+          v-if="!isMobileApp && !isIframe"
           id="use-ledger-nano"
           icon="vpn_key"
           title="Use Ledger"
